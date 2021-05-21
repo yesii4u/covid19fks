@@ -7,8 +7,8 @@ const environment = process.env.NODE_ENV || 'development'
 // github pages
 const routerBase = '/c19fks/'
 const config: NuxtConfig = {
- // mode: 'universal',
-  ssr: false,
+  mode: 'universal',
+  //ssr: false,
   target: 'static',
   /*
    ** Headers of the page
