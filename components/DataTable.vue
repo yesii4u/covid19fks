@@ -11,7 +11,16 @@
       :height="240"
       :fixed-header="true"
       :mobile-breakpoint="0"
+      :filter="filter"
+      :search="search"
       class="cardTable"
+    />
+    <v-text-field
+      v-model="search"
+      :placeholder="$t('絞り込み')"
+      clearable
+      hide-details
+      solo
     />
     <template v-slot:infoPanel>
       <data-view-basic-info-panel
@@ -102,6 +111,16 @@ export default Vue.extend({
     url: {
       type: String,
       default: ''
+    }
+  },
+  data() {
+    return {
+      search: ''
+    }
+  },
+  methods: {
+    filter(val: any, search: any) {
+      return val.contains(search)
     }
   }
 })
