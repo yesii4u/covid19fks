@@ -21,7 +21,8 @@ const config: NuxtConfig = {
       }
     ],
     htmlAttrs: {
-      prefix: 'og: http://ogp.me/ns#'
+      prefix: 'og: http://ogp.me/ns#',
+      lang: 'ja'
     },
     titleTemplate: '%s | 福島県 新型コロナウイルス感染症対策サイト',
     meta: [
