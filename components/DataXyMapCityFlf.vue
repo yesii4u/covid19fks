@@ -59,7 +59,7 @@
 
 <script lang="ts">
 // memo
-// mapviewとして分割すべきかされど[slot]化は見通しを悪くする気がするのだが
+// mapviewとして分割すべきか--されど[slot]化は見通しを悪くする気がするのだが
 import Vue from 'vue'
 import { MetaInfo } from 'vue-meta'
 import dayjs from 'dayjs'
@@ -106,20 +106,12 @@ export default Vue.extend({
     }
   },
   data() {
-    // object copy
-    const theDataD = {}
-    Object.assign(theDataD, this.theData)
     // 陽性者数グラフ
     const patientsGraphData = formatGraph(this.theData.patients_summary.data)
     // 陽性者数
     const patientsTableData = formatTable(this.theData.patients.data)
     // 直近の公表日の取得
-    /* notuse
-    const lad = new Date(
-      //this.theData.patients_summary.data[this.theData.patients_summary.data.length - 1]['日付']
-      this.theData.patients_summary.data[this.theData.patients_summary.data.length - 1].label
-    )
-    */
+
     const imageboundsD = [
       [37.051277285581236, 141.31341102527992],
       [37.504796327472725, 141.56001327561324]
@@ -156,7 +148,6 @@ export default Vue.extend({
       dateD: this.date,
       totalPersons: '',
       remainderData: [],
-      theDataD,
       patientsGraph: patientsGraphData,
       patientsTable: patientsTableData,
       imageurl: '/images/blue01.png',
@@ -211,24 +202,10 @@ export default Vue.extend({
     })
     tileLayer.addTo(map)
 
-    // object copy
-    // this.theDataD ={}
-    // Object.assign(this.theDataD, this.theData)
-    // const theDataMap = Vue.util.extend({}, this.theData);
     // 陽性者数グラフ
     this.patientsGraphData = formatGraph(this.theData.patients_summary.data)
     // 陽性者数
     this.patientsTableData = formatTable(this.theData.patients.data)
-    // 陽性患者の属性 ヘッダー翻訳
-    for (const header of this.patientsTable.headers) {
-      header.text = this.$t(header.value)
-    }
-    // 陽性患者の属性 中身の翻訳
-    for (const row of this.patientsTable.datasets) {
-      row['公表日'] = this.$t(row['公表日'])
-      row['居住地'] = this.$t(row['居住地'])
-      row['累計'] = this.$t(row['累計'])
-    }
 
     // Geoデータの準備
     const gCityName = ''

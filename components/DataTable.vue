@@ -119,7 +119,7 @@ export default Vue.extend({
     }
   },
   methods: {
-    filter(val: any, search: any) {
+    filter(val: any, search: any): any {
       return val.contains(search)
     }
   }

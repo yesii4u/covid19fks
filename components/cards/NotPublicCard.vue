@@ -24,7 +24,7 @@
           {{ $t('個々人は十分に頑張っていると思います。 ') }}
         </p>
         <p>
-          {{ $t('release:2021/01 &nbsp;&nbsp; 2nd:2021/05') }}
+          {{ $t('release:2021/01 &nbsp;&nbsp; 3rd:2021/06') }}
         </p>
       </StaticCard>
     </div>

@@ -1,5 +1,19 @@
-<template>
+<template v-slot:bartable>
   <v-col cols="12" md="6" class="DataCard">
+    <!--time-bar-chart
+      id="number-of-confirmed-cases"
+      :title="$t('陽性者の属性')"
+      :title-id="'attributes-of-confirmed-cases'"
+      :chart-id="'time-bar-chart-attributes'"
+      :chart-data="patientsGraph"
+      :date="Data.patients.date"
+      :last-acquisite-date="lastAcquisiteDate"
+      :unit="$t('人')"
+      :url="
+        'https://www.pref.fukushima.lg.jp/sec/21045c/fukushima-hasseijyoukyou.html'
+      "
+      :chart-table="patientsTable"
+    / -->
     <data-table
       id="attributes-of-confirmed-cases"
       :title="$t('陽性患者の属性')"
@@ -18,11 +32,13 @@
 <script>
 import Data from '@/data/data.json'
 import formatGraph from '@/utils/formatGraph'
-import formatTable from '@/utils/formatTable'
+import formatTable from '@/utils/formatTable' // '@/utils/formatTableCity'
+// import TimeBarChart from '@/components/TimeBarChart.vue'
 import DataTable from '@/components/DataTable.vue'
 
 export default {
   components: {
+    // TimeBarChart,
     DataTable
   },
   props: {
@@ -33,10 +49,17 @@ export default {
     }
   },
   data() {
-    // 感染者数グラフ
-    const patientsGraph = formatGraph(Data.patients_summary.data)
-    // 感染者数
-    const patientsTable = formatTable(Data.patients.data)
+    // 陽性者数グラフ
+    const patientsGraph = formatGraph(this.graphData.patients_summary.data)
+    // 陽性者数
+    const patientsTable = formatTable(this.graphData.patients.data)
+    // 1
+    // 直近の公表日の取得
+    const lastIndex = this.graphData.patients_summary.data.length - 1
+    const lad = new Date(
+      this.graphData.patients_summary.data[lastIndex]['日付']
+    )
+    // 1end
 
     const sumInfoOfPatients = {
       lText: patientsGraph[
@@ -48,68 +71,40 @@ export default {
       unit: this.$t('人')
     }
 
-    // 陽性患者の属性 ヘッダー翻訳
-    for (const header of patientsTable.headers) {
-      header.text = this.$t(header.value)
-    }
-    // 陽性患者の属性 中身の翻訳
-    for (const row of patientsTable.datasets) {
-      row['居住地'] = this.$t(row['居住地'])
-      row['性別'] = this.$t(row['性別'])
-
-      if (row['年代'] === '10歳未満') {
-        row['年代'] = this.$t('10歳未満')
-      } else if (row['年代'] === '90歳以上') {
-        row['年代'] = this.$t('90歳以上')
-      } else {
-        const age = row['年代'].substring(0, 2)
-        row['年代'] = this.$t('{age}代', { age })
-      }
-    }
-
     const data = {
       Data,
+      patientsGraph,
       patientsTable,
-      sumInfoOfPatients
+      sumInfoOfPatients,
+      lastAcquisiteDate: `${lad.getMonth() + 1}/${lad.getDate()}`
     }
     return data
   },
   mounted() {
-    // TODO: This func is redundant. Better to refactor with data()
     this.Data = this.graphData
-    // 感染者数グラフ
-    const patientsGraph = formatGraph(this.graphData.patients_summary.data)
-    // 感染者数
-    this.patientsTable = formatTable(this.graphData.patients.data)
+    // 陽性者数グラフ
+    this.patientsGraph = formatGraph(this.Data.patients_summary.data)
+    // 陽性者数
+    this.patientsTable = formatTable(this.Data.patients.data)
 
     this.sumInfoOfPatients = {
-      lText: patientsGraph[
-        patientsGraph.length - 1
+      lText: this.patientsGraph[
+        this.patientsGraph.length - 1
       ].cumulative.toLocaleString(),
       sText: this.$t('{date}の累計', {
-        date: patientsGraph[patientsGraph.length - 1].label
+        date: this.patientsGraph[this.patientsGraph.length - 1].label
       }),
       unit: this.$t('人')
     }
 
-    // 陽性患者の属性 ヘッダー翻訳
-    for (const header of this.patientsTable.headers) {
-      header.text = this.$t(header.value)
-    }
-    // 陽性患者の属性 中身の翻訳
-    for (const row of this.patientsTable.datasets) {
-      row['居住地'] = this.$t(row['居住地'])
-      row['性別'] = this.$t(row['性別'])
-
-      if (row['年代'] === '10歳未満') {
-        row['年代'] = this.$t('10歳未満')
-      } else if (row['年代'] === '90歳以上') {
-        row['年代'] = this.$t('90歳以上')
-      } else {
-        const age = row['年代'].substring(0, 2)
-        row['年代'] = this.$t('{age}代', { age })
-      }
-    }
+    // 2
+    const lastIndex = this.Data.patients_summary.data.length - 1
+    // 直近の公表日の取得
+    const lad = new Date(
+      this.graphData.patients_summary.data[lastIndex]['日付']
+    )
+    this.lastAcquisiteDate = `${lad.getMonth() + 1}/${lad.getDate()}`
+    // 2end
   }
 }
 </script>

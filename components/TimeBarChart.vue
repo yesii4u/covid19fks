@@ -29,6 +29,23 @@
         />
       </template>
     </scrollable-chart>
+
+    <template v-slot:dtable>
+      <data-view-table :headers="tableHeaders" :items="tableData" />
+      <!--data-table
+        id="attributes-of-confirmed-cases"
+        :title="$t('陽性者の属性')"
+        :title-id="'attributes-of-confirmed-cases'"
+        :chart-data="chartTable"
+        :chart-option="{}"
+        :date="lastAcquisiteDate"
+        :info="displayInfo"
+        :url="
+          'https://www.pref.fukushima.lg.jp/sec/21045c/fukushima-hasseijyoukyou.html'
+        "
+      / -->
+    </template>
+
     <template v-slot:infoPanel>
       <data-view-basic-info-panel
         :l-text="displayInfo.lText"
@@ -49,6 +66,8 @@ import { TranslateResult } from 'vue-i18n'
 import DataView from '@/components/DataView.vue'
 import DataSelector from '@/components/DataSelector.vue'
 import DataViewBasicInfoPanel from '@/components/DataViewBasicInfoPanel.vue'
+import DataTable from '@/components/DataTable.vue'
+import DataViewTable from '@/components/DataViewTable.vue'
 import ScrollableChart from '@/components/ScrollableChart.vue'
 import { DisplayData, yAxesBgPlugin } from '@/plugins/vue-chart'
 import { getComplementedDate } from '@/utils/formatDate'
@@ -99,6 +118,7 @@ type Props = {
   url: string
   descriptions: string[]
   yAxesBgPlugin: Chart.PluginServiceRegistrationOptions[]
+  chartTable: GraphDataType[]
 }
 
 const options: ThisTypedComponentOptionsWithRecordProps<
@@ -119,7 +139,9 @@ const options: ThisTypedComponentOptionsWithRecordProps<
     DataView,
     DataSelector,
     DataViewBasicInfoPanel,
-    ScrollableChart
+    ScrollableChart,
+    DataTable,
+    DataViewTable
   },
   props: {
     title: {
@@ -161,6 +183,11 @@ const options: ThisTypedComponentOptionsWithRecordProps<
     yAxesBgPlugin: {
       type: Array,
       default: () => yAxesBgPlugin
+    },
+    chartTable: {
+      type: Array,
+      default: () => [],
+      required: false
     }
   },
   data: () => ({
@@ -450,11 +477,13 @@ const options: ThisTypedComponentOptionsWithRecordProps<
       return options
     },
     scaledTicksYAxisMax() {
-      const yAxisMax = 1.2
+      // yesii
+      // const yAxisMax = 1.0  //1.2
       const dataKind =
         this.dataKind === 'transition' ? 'transition' : 'cumulative'
       const values = this.chartData.map(d => d[dataKind])
-      return Math.max(...values) * yAxisMax
+      // return Math.max(...values) * yAxisMax
+      return Math.max(...values)
     },
     tableHeaders() {
       return [
@@ -475,9 +504,14 @@ const options: ThisTypedComponentOptionsWithRecordProps<
       return this.chartData
         .map((d, _) => {
           return {
+            /*
             text: this.$d(
-              new Date(getComplementedDate(d.label)),
-              'dateWithoutYear'
+              new Date(getComplementedDate(d.label))
+            ),
+            text: d.label.toLocaleString(),
+            */
+            text: dayjs(new Date(getComplementedDate(d.label))).format(
+              'YYYY/MM/DD'
             ),
             transition: d.transition.toLocaleString(),
             cumulative: d.cumulative.toLocaleString()

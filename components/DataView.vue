@@ -14,6 +14,13 @@
       <div class="DataView-CardText">
         <slot />
       </div>
+
+      <div v-if="!!this.$slots.dtable" class="DataView-ExpansionPanel">
+        <expansion-panel-fks>
+          <slot name="dtable" />
+        </expansion-panel-fks>
+      </div>
+
       <div class="DataView-Footer">
         <div class="Footer-Left">
           <!-- <div>
@@ -131,8 +138,10 @@
 <script lang="ts">
 import Vue from 'vue'
 import { convertDatetimeToISO8601Format } from '@/utils/formatDate'
+import ExpansionPanelFks from '@/components/ExpansionPanelFks.vue'
 
 export default Vue.extend({
+  components: { ExpansionPanelFks },
   props: {
     title: {
       type: String,
@@ -309,6 +318,10 @@ export default Vue.extend({
       width: 50%;
       margin-bottom: 0;
     }
+  }
+  &-ExpansionPanel {
+    margin-bottom: 10px;
+    margin-left: -1rem;
   }
   &-CardText {
     margin: 0 0;
