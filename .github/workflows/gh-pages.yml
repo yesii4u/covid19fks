@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with: persist-credentials: false
       - uses: actions/setup-node@v1 
       - run: yarn install
       - run: yarn build:gh-pages
