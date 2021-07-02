@@ -2,19 +2,21 @@ name: github pages
 
 on:
   push:
-    branches:
-      - master
+    branches:master
+  pull_request:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with: persist-credentials: false
-      - uses: actions/setup-node@v1 
+        with:
+          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
+
       - run: yarn install
       - run: yarn build:gh-pages
       - run: yarn generate:gh-pages
+
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
