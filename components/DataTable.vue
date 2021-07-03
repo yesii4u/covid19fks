@@ -11,7 +11,6 @@
       :height="240"
       :fixed-header="true"
       :mobile-breakpoint="0"
-      :filter="filter"
       :search="search"
       class="cardTable"
     />
@@ -119,9 +118,9 @@ export default Vue.extend({
     }
   },
   methods: {
-    filter(val: any, search: any): any {
-      console.log('val=')
-      return val.contains(search)
+    myfilter(val: any, search: any): any {
+      const tbl = val.contains(search)
+      return tbl
     }
   }
 })
