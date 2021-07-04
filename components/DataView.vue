@@ -319,16 +319,16 @@ export default Vue.extend({
       margin-bottom: 0;
     }
   }
-  &-ExpansionPanel {
-    margin-bottom: 10px;
-    margin-left: -1rem;
-  }
   &-CardText {
     margin: 0 0;
   }
   &-CardTextForXS {
     margin-bottom: 46px;
     margin-top: 70px;
+  }
+  &-ExpansionPanel {
+    margin-bottom: 10px;
+    margin-left: -1rem;
   }
   &-Embed {
     background-color: $gray-5;
